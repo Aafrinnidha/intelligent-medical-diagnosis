@@ -1,0 +1,23 @@
+{
+  "name": "intelligent-medical-diagnosis",
+  "version": "1.0.0",
+  "description": "Intelligent Medical Diagnosis and Clinical Decision Support System Using Knowledge Engineering",
+  "main": "server/app.js",
+  "scripts": {
+    "build": "npm install --prefix server && npm install --prefix client && npm run build --prefix client",
+    "start": "node server/app.js",
+    "server": "npm start --prefix server",
+    "client": "npm run dev --prefix client",
+    "test": "npm test --prefix server"
+  },
+  "keywords": [
+    "medical-diagnosis",
+    "decision-support-system",
+    "knowledge-engineering",
+    "forward-chaining",
+    "mern-stack"
+  ],
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

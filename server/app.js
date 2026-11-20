@@ -1,4 +1,6 @@
 require('dotenv').config();
+const path = require('path');
+const fs = require('fs');
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
@@ -20,10 +22,14 @@ const diagnosisRoutes = require('./routes/diagnosisRoutes');
 const app = express();
 
 // Security & middleware
-app.use(helmet());
+app.use(
+  helmet({
+    contentSecurityPolicy: false,
+  })
+);
 app.use(
   cors({
-    origin: process.env.CLIENT_URL || 'http://localhost:5173',
+    origin: process.env.CLIENT_URL || true,
     credentials: true,
   })
 );
@@ -54,8 +60,20 @@ app.use('/api/emergency', emergencyRoutes);
 app.use('/api/knowledge-base', knowledgeBaseRoutes);
 app.use('/api/diagnoses', diagnosisRoutes);
 
-// Error handlers
-app.use(notFoundHandler);
+// Serve frontend static build if it exists (for full-stack deployment on Render/Railway/cloud)
+const clientDistPath = path.resolve(__dirname, '../client/dist');
+if (fs.existsSync(clientDistPath)) {
+  app.use(express.static(clientDistPath));
+  app.get('*', (req, res, next) => {
+    if (req.path.startsWith('/api')) {
+      return next();
+    }
+    res.sendFile(path.join(clientDistPath, 'index.html'));
+  });
+}
+
+// 404 handler for API routes
+app.use('/api', notFoundHandler);
 app.use(errorHandler);
 
 async function startServer() {
