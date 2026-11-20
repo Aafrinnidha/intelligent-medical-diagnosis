@@ -96,3 +96,4 @@ Open `http://localhost:5173` in your browser.
 cd server
 npm test
 ```
+https://intelligent-medical-diagnosis.vercel.app/login
